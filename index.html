@@ -2,13 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LP Móveis Planejados | A Engenharia do Seu Espaço</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SARTORIA | A Alta-Costura do Mobiliário Planejado</title>
+    
+    <!-- Preload de Fontes Críticas para Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@100;300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    
     <style>
         :root {
             --obsidian: #0a0a0a;
@@ -23,24 +29,36 @@
             color: var(--smoke);
             font-family: var(--font-ui);
             overflow-x: hidden;
-            cursor: none;
+            -webkit-font-smoothing: antialiased; /* Suavização extra no iOS */
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Cursor Customizado Sensorial */
-        #custom-cursor {
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transition: transform 0.15s ease-out;
+        /* Oculta scrollbar em carrosseis horizontais (Mobile) */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        .hero-gradient {
-            background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,1) 100%);
+        /* Cursor Customizado Sensorial (Apenas Desktop) */
+        @media (hover: hover) and (pointer: fine) {
+            body { cursor: none; }
+            #custom-cursor {
+                width: 20px;
+                height: 20px;
+                background: white;
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                mix-blend-mode: difference;
+                transition: transform 0.15s ease-out;
+            }
+        }
+        @media (hover: none) {
+            #custom-cursor { display: none !important; }
         }
 
         .grain {
@@ -54,7 +72,8 @@
 
         .glass {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* Suporte Safari */
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -62,11 +81,13 @@
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
         }
 
-        /* Otimização Mobile */
-        @media (max-width: 768px) {
-            cursor: auto !important;
-            #custom-cursor { display: none; }
-            .hero-title { font-size: 2.5rem !important; }
+        /* Menu Overlay Fullscreen */
+        #mobile-menu {
+            clip-path: circle(0% at top right);
+            transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        #mobile-menu.menu-open {
+            clip-path: circle(150% at top right);
         }
     </style>
 </head>
@@ -75,284 +96,368 @@
     <div id="custom-cursor"></div>
     <div class="grain"></div>
 
-    <!-- Barra de Navegação Minimalista -->
-    <nav class="fixed w-full z-[100] p-6 flex justify-between items-center transition-all duration-500" id="navbar">
-        <div class="text-2xl font-bold tracking-tighter">SARTORIA<span class="font-light text-xs align-top ml-1">®</span></div>
+    <!-- Barra de Navegação: Mobile-First -->
+    <nav class="fixed w-full z-[100] p-4 md:p-6 flex justify-between items-center transition-all duration-500" id="navbar">
+        <div class="text-xl md:text-2xl font-bold tracking-tighter z-[110] relative">SARTORIA<span class="font-light text-[8px] md:text-xs align-top ml-1">®</span></div>
+        
+        <!-- Desktop Links -->
         <div class="hidden md:flex space-x-10 text-[11px] uppercase tracking-[0.3em] font-light">
-            <a href="#" class="hover:text-gold-muted transition">O Atelier</a>
-            <a href="#" class="hover:text-gold-muted transition">Coleções</a>
-            <a href="#" class="hover:text-gold-muted transition">Obras Executadas</a>
+            <a href="#" class="hover:text-gold-muted transition p-2">O Atelier</a>
+            <a href="#" class="hover:text-gold-muted transition p-2">Coleções</a>
+            <a href="#" class="hover:text-gold-muted transition p-2">Obras Executadas</a>
         </div>
-        <button class="glass px-6 py-2 text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+        
+        <!-- Desktop CTA -->
+        <button class="hidden md:block glass px-6 py-2 text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">
             Consultoria Privada
+        </button>
+
+        <!-- Mobile Menu Toggle (Hambúrguer) -->
+        <button id="menu-toggle" class="md:hidden relative z-[110] p-2 focus:outline-none" aria-label="Abrir menu">
+            <div class="w-6 h-[1px] bg-white mb-2 transition-transform duration-300 origin-right" id="line-1"></div>
+            <div class="w-6 h-[1px] bg-white transition-transform duration-300 origin-right" id="line-2"></div>
         </button>
     </nav>
 
-    <!-- SEÇÃO HERO EDITORIAL & NEURO-VENDAS -->
-    <section class="relative h-[100svh] w-full flex flex-col justify-end pb-12 md:pb-20 overflow-hidden">
-        <!-- Background Dinâmico (Efeito Ken Burns) -->
-        <div class="absolute inset-0 z-0">
-            <!-- Gradiente Vignette reajustado: Libera totalmente o topo (muito respiro) e escurece de forma suave apenas a base e lateral onde o texto descansa -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/60 to-transparent z-10 w-full md:w-3/4"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent z-10 h-[80%] bottom-0"></div>
-            <!-- Imagem de Altíssimo Padrão -->
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000" 
-                 alt="Cozinha de Luxo Planejada" 
-                 class="w-full h-full object-cover object-top origin-center z-0" id="hero-img">
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-[#050505] z-[105] flex flex-col justify-center items-center">
+        <div class="flex flex-col space-y-8 text-center text-xl" style="font-family: var(--font-editorial);">
+            <a href="#" class="mobile-link text-white/70 hover:text-white transition-colors italic">O Atelier</a>
+            <a href="#" class="mobile-link text-white/70 hover:text-white transition-colors italic">Coleções Assinadas</a>
+            <a href="#" class="mobile-link text-white/70 hover:text-white transition-colors italic">Obras Executadas</a>
         </div>
+        <button class="mt-16 bg-gold-muted text-black px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-full">
+            Agendar Consultoria
+        </button>
+    </div>
 
-        <!-- Layout Assimétrico Editorial ancorado na base -->
-        <div class="relative z-30 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-end justify-between">
-            
-            <!-- Coluna Esquerda: O Copy de Alto Ticket -->
-            <div class="w-full md:w-3/5 text-left mb-6 md:mb-0">
-                <div class="text-reveal overflow-hidden mb-4 md:mb-6">
-                    <div class="flex items-center gap-3 md:gap-4 opacity-0" id="hero-sub">
-                        <div class="w-6 md:w-8 h-[1px] bg-gold-muted"></div>
-                        <p class="text-gold-muted uppercase tracking-[0.3em] md:tracking-[0.4em] text-[8px] md:text-[10px] font-bold">Arquitetura em Mobília</p>
-                    </div>
-                </div>
+    <!-- MAIN WRAPPER PARA ACESSIBILIDADE -->
+    <main>
+        <!-- SEÇÃO HERO EDITORIAL -->
+        <section class="relative h-[100svh] w-full flex flex-col justify-end pb-8 md:pb-20 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <!-- Desktop Gradients (Preservados para Telas Grandes) -->
+                <div class="hidden md:block absolute bottom-0 left-0 w-[60%] h-[50%] bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent z-10"></div>
+                <div class="hidden md:block absolute bottom-0 left-0 w-full h-[45%] bg-gradient-to-t from-[#050505] via-[#050505]/90 to-transparent z-10"></div>
                 
-                <!-- Tipografia super responsiva: Fica delicada no mobile e gigante no desktop -->
-                <h1 class="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tighter mb-6 opacity-0" id="hero-main">
-                    A Alta-Costura do <br> 
-                    <span class="italic font-bold" style="font-family: var(--font-editorial);">Mobiliário Planejado.</span>
-                </h1>
-                
-                <p class="text-white/60 font-light text-xs sm:text-sm md:text-base max-w-md leading-relaxed mb-8 md:mb-10 opacity-0" id="hero-desc">
-                    Não preenchemos espaços. Nós esculpimos o seu modo de viver. Projetos autorais executados milímetro a milímetro para ambientes que exigem o extraordinário.
-                </p>
-
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-8 opacity-0" id="hero-cta">
-                    <button class="bg-white text-black px-8 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-gold-muted hover:text-white transition-colors duration-300 w-full sm:w-auto text-center">
-                        Agendar Consultoria
-                    </button>
-                    <button class="flex items-center justify-center sm:justify-start gap-3 group text-white/50 hover:text-white transition-colors w-full sm:w-auto">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white transition-colors shrink-0">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] uppercase tracking-widest font-light">Explorar o Acervo</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Coluna Direita: O Gatilho da Autoridade Técnica (Glassmorphism) -->
-            <div class="w-full md:w-2/5 flex justify-end opacity-0 hidden md:flex pb-2" id="hero-card">
-                <div class="glass p-6 rounded-2xl w-72 border border-white/10 shadow-2xl relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <p class="text-[9px] uppercase tracking-[0.3em] text-white/40 mb-4 border-b border-white/10 pb-2">Especificação em Destaque</p>
-                    <h4 class="font-bold text-sm mb-1" style="font-family: var(--font-editorial);">Residência Alphaville</h4>
-                    <p class="text-xs font-light text-white/60 mb-6">Execução Completa • 450m²</p>
+                <!-- MOBILE ARCHITECTURAL GLASS (Engenharia de Materiais & Ultra Luxo) -->
+                <div class="md:hidden absolute bottom-0 left-0 w-full h-[85%] z-10 overflow-hidden pointer-events-none flex flex-col justify-end">
+                    <!-- Sombra base para dar volume e flutuabilidade -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/70 to-transparent"></div>
                     
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-light text-white/40 uppercase tracking-wider">Lâmina</span>
-                            <span class="text-xs font-medium">Nogueira Italiana</span>
+                    <!-- Lâmina de Vidro Fosco Estrutural (Inclinada em Ângulo Arquitetônico) -->
+                    <div class="relative w-[130%] h-[80%] -left-[15%] bg-white/[0.03] backdrop-blur-[35px] border-t border-white/20 transform -rotate-[5deg] translate-y-12 shadow-[0_-20px_50px_rgba(0,0,0,0.9)] origin-bottom-right" id="mobile-glass">
+                        <!-- Refração de Luz (Luz Especular na Borda do Vidro) -->
+                        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-80"></div>
+                        <!-- Textura Interna simulando vidro inteligente/mármore translúcido -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-20 mix-blend-overlay"></div>
+                    </div>
+                </div>
+
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000" 
+                     alt="Cozinha de Luxo Planejada" 
+                     class="w-full h-full object-cover object-center origin-center z-0" id="hero-img">
+            </div>
+
+            <div class="relative z-30 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-end justify-between">
+                <!-- Copy Esquerda (Alinhada ao Eixo Estrutural Dourado no Mobile) -->
+                <div class="w-full md:w-3/5 text-left mb-6 md:mb-0 relative md:pl-0 pl-5 border-l-[1.5px] md:border-l-0 border-gold-muted/40">
+                    <div class="text-reveal overflow-hidden mb-4 md:mb-6">
+                        <div class="flex items-center gap-3 opacity-0" id="hero-sub">
+                            <div class="w-6 h-[1px] bg-gold-muted md:block hidden"></div>
+                            <p class="text-gold-muted uppercase tracking-[0.3em] md:tracking-[0.4em] text-[8px] md:text-[10px] font-bold">Arquitetura em Mobília</p>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-light text-white/40 uppercase tracking-wider">Ferragens</span>
-                            <span class="text-xs font-medium">Blum Legrabox®</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-light text-white/40 uppercase tracking-wider">Tolerância</span>
-                            <span class="text-xs font-medium text-gold-muted">0.1 milímetros</span>
+                    </div>
+                    
+                    <h1 class="text-[2.6rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tighter mb-4 md:mb-6 opacity-0" id="hero-main">
+                        A Alta-Costura do <br> 
+                        <span class="italic font-bold" style="font-family: var(--font-editorial);">Mobiliário Planejado.</span>
+                    </h1>
+                    
+                    <p class="text-white/80 font-light text-[13px] sm:text-sm md:text-base max-w-[95%] md:max-w-md leading-relaxed mb-8 md:mb-10 opacity-0 drop-shadow-md" id="hero-desc">
+                        Não preenchemos espaços. Nós esculpimos o seu modo de viver. Projetos autorais executados milímetro a milímetro.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-8 opacity-0" id="hero-cta">
+                        <button class="bg-white text-black px-6 md:px-10 py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-gold-muted hover:text-white transition-colors duration-300 w-full sm:w-auto text-center rounded-sm">
+                            Agendar Consultoria
+                        </button>
+                        <button class="flex items-center justify-center sm:justify-start gap-3 group text-white/80 hover:text-white transition-colors w-full sm:w-auto p-2">
+                            <div class="flex justify-between items-center"><span class="text-[10px] text-white/40 uppercase">Tolerância</span><span class="text-xs font-medium text-gold-muted">0.1 milímetros</span></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-6 left-6 md:left-12 z-30 flex items-center gap-4 opacity-0 hidden md:flex" id="hero-scroll">
-            <span class="text-[9px] uppercase tracking-[0.4em] text-white/40 rotate-180" style="writing-mode: vertical-rl;">Deslize</span>
-            <div class="w-[1px] h-12 bg-gradient-to-b from-white/50 to-transparent"></div>
-        </div>
-    </section>
-
-    <!-- NOVA SEÇÃO: TENDÊNCIAS CROMÁTICAS (MAIO 2026) -->
-    <section class="py-24 px-6 bg-[#080808] relative z-10 border-t border-white/5 overflow-hidden">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal-up">
-                <div>
-                    <span class="text-gold-muted uppercase tracking-[0.3em] text-[10px] block mb-4">Trend Report | Maio 2026</span>
-                    <h2 class="text-4xl md:text-5xl font-light leading-tight" style="font-family: var(--font-editorial);">A Cromática <br><span class="italic text-white/50">do Silêncio.</span></h2>
+        <!-- TENDÊNCIAS CROMÁTICAS (Otimizado Mobile) -->
+        <section class="py-16 md:py-24 px-4 md:px-6 bg-[#080808] relative z-10 border-t border-white/5 overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 reveal-up">
+                    <div>
+                        <span class="text-gold-muted uppercase tracking-[0.3em] text-[9px] md:text-[10px] block mb-3">Trend Report | Maio 2026</span>
+                        <h2 class="text-3xl md:text-5xl font-light leading-tight" style="font-family: var(--font-editorial);">A Cromática <br><span class="italic text-white/50">do Silêncio.</span></h2>
+                    </div>
+                    <p class="text-white/50 text-xs md:text-sm max-w-xs md:max-w-sm font-light mt-4 md:mt-0 leading-relaxed md:text-right">
+                        Tons extraídos da natureza bruta, desenhados para acalmar a mente de ambientes de alto padrão.
+                    </p>
                 </div>
-                <p class="text-white/40 text-sm max-w-sm font-light mt-6 md:mt-0 leading-relaxed md:text-right">
-                    Tons extraídos da natureza bruta, desenhados para acalmar a mente e elevar a atmosfera de ambientes de altíssimo padrão.
-                </p>
-            </div>
 
-            <!-- Paleta de Cores Interativa -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-72 md:h-96 reveal-up" style="transition-delay: 0.2s;">
+                <!-- Paleta de Cores (Mobile: 1 col + visible text | Desktop: 4 col + hover effect) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 h-auto md:h-96 reveal-up">
+                    
+                    <div class="group relative overflow-hidden rounded-2xl cursor-pointer h-48 md:h-full">
+                        <div class="absolute inset-0 bg-[#121212] transition-transform duration-700 md:group-hover:scale-105"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 md:opacity-80"></div>
+                        <div class="absolute bottom-5 left-5">
+                            <span class="text-[8px] md:text-[9px] uppercase tracking-widest text-gold-muted block mb-1">01. Rocha</span>
+                            <h4 class="text-white text-lg font-light tracking-wider">Nero Marquina</h4>
+                        </div>
+                    </div>
+
+                    <div class="group relative overflow-hidden rounded-2xl cursor-pointer h-48 md:h-full">
+                        <div class="absolute inset-0 bg-[#8A8177] transition-transform duration-700 md:group-hover:scale-105"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 md:opacity-60"></div>
+                        <div class="absolute bottom-5 left-5">
+                            <span class="text-[8px] md:text-[9px] uppercase tracking-widest text-white/70 block mb-1">02. Trama</span>
+                            <h4 class="text-white text-lg font-light tracking-wider">Cashmere Matte</h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Mais duas cores ocultas no mobile muito pequeno para evitar scroll infinito, mas mantidas p/ tablet+ -->
+                    <div class="group relative overflow-hidden rounded-2xl cursor-pointer h-48 md:h-full hidden sm:block">
+                        <div class="absolute inset-0 bg-[#2C332A] transition-transform duration-700 md:group-hover:scale-105"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 md:opacity-60"></div>
+                        <div class="absolute bottom-5 left-5">
+                            <span class="text-[8px] md:text-[9px] uppercase tracking-widest text-white/70 block mb-1">03. Botânica</span>
+                            <h4 class="text-white text-lg font-light tracking-wider">Musgo Nórdico</h4>
+                        </div>
+                    </div>
+
+                    <div class="group relative overflow-hidden rounded-2xl cursor-pointer h-48 md:h-full hidden lg:block">
+                        <div class="absolute inset-0 bg-[#595A5A] transition-transform duration-700 md:group-hover:scale-105"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 md:opacity-60"></div>
+                        <div class="absolute bottom-5 left-5">
+                            <span class="text-[8px] md:text-[9px] uppercase tracking-widest text-white/70 block mb-1">04. Metal</span>
+                            <h4 class="text-white text-lg font-light tracking-wider">Titânio Escovado</h4>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- A ARQUITETURA DO PROCESSO -->
+        <section class="py-16 md:py-32 px-4 md:px-6 bg-[#050505] relative z-10 border-t border-white/5">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 reveal-up">
+                    <div>
+                        <span class="text-gold-muted uppercase tracking-[0.3em] text-[9px] block mb-3">Nossa Metodologia</span>
+                        <h2 class="text-3xl md:text-6xl font-light leading-tight" style="font-family: var(--font-editorial);">Do <span class="italic text-white/50">Croqui</span> <br>à Realidade.</h2>
+                    </div>
+                </div>
                 
-                <!-- Cor 1 -->
-                <div class="group relative overflow-hidden rounded-2xl cursor-pointer">
-                    <div class="absolute inset-0 bg-[#121212] transition-transform duration-700 group-hover:scale-105"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-80"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">01. Rocha</span>
-                        <h4 class="text-white text-base md:text-lg font-light tracking-wider">Nero Marquina</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                    <div class="border-t border-white/10 pt-6 reveal-up">
+                        <span class="text-white/20 text-3xl md:text-4xl mb-3 block" style="font-family: var(--font-editorial);">01.</span>
+                        <h4 class="text-base md:text-lg uppercase tracking-widest mb-2 md:mb-4 font-bold">Imersão & Briefing</h4>
+                        <p class="text-white/50 text-xs md:text-sm font-light leading-relaxed">Mapeamento sensorial do seu espaço. Entendemos a luz e suas necessidades.</p>
                     </div>
-                </div>
-
-                <!-- Cor 2 -->
-                <div class="group relative overflow-hidden rounded-2xl cursor-pointer">
-                    <div class="absolute inset-0 bg-[#8A8177] transition-transform duration-700 group-hover:scale-105"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">02. Trama</span>
-                        <h4 class="text-white text-base md:text-lg font-light tracking-wider">Cashmere Matte</h4>
+                    <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.1s;">
+                        <span class="text-white/20 text-3xl md:text-4xl mb-3 block" style="font-family: var(--font-editorial);">02.</span>
+                        <h4 class="text-base md:text-lg uppercase tracking-widest mb-2 md:mb-4 font-bold">Engenharia 3D</h4>
+                        <p class="text-white/50 text-xs md:text-sm font-light leading-relaxed">Prototipagem virtual. Compatibilização estrutural com o projeto arquitetônico.</p>
                     </div>
-                </div>
-
-                <!-- Cor 3 -->
-                <div class="group relative overflow-hidden rounded-2xl cursor-pointer">
-                    <div class="absolute inset-0 bg-[#2C332A] transition-transform duration-700 group-hover:scale-105"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">03. Botânica</span>
-                        <h4 class="text-white text-base md:text-lg font-light tracking-wider">Musgo Nórdico</h4>
-                    </div>
-                </div>
-
-                <!-- Cor 4 -->
-                <div class="group relative overflow-hidden rounded-2xl cursor-pointer">
-                    <div class="absolute inset-0 bg-[#595A5A] transition-transform duration-700 group-hover:scale-105"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60"></div>
-                    <div class="absolute bottom-6 left-6">
-                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">04. Metal</span>
-                        <h4 class="text-white text-base md:text-lg font-light tracking-wider">Titânio Escovado</h4>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- NOVA SEÇÃO: A ARQUITETURA DO PROCESSO (Metodologia) -->
-    <section class="py-32 px-6 bg-[#050505] relative z-10 border-t border-white/5">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
-                <div>
-                    <span class="text-gold-muted uppercase tracking-[0.3em] text-[10px] block mb-4">Nossa Metodologia</span>
-                    <h2 class="text-4xl md:text-6xl font-light leading-tight" style="font-family: var(--font-editorial);">Do <span class="italic text-white/50">Croqui</span> <br>à Realidade.</h2>
-                </div>
-                <p class="text-white/40 text-sm max-w-sm font-light mt-6 md:mt-0 leading-relaxed">
-                    O mesmo rigor técnico aplicado em obras de arte monumentais, trazido para a escala da sua rotina e do seu lar.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Step 1 -->
-                <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.1s;">
-                    <span class="text-white/20 text-4xl mb-4 block" style="font-family: var(--font-editorial);">01.</span>
-                    <h4 class="text-lg uppercase tracking-widest mb-4 font-bold">Imersão & Briefing</h4>
-                    <p class="text-white/50 text-sm font-light leading-relaxed">Mapeamento sensorial do seu espaço. Entendemos a luz, a circulação e as suas necessidades de armazenamento invisíveis.</p>
-                </div>
-                <!-- Step 2 -->
-                <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.3s;">
-                    <span class="text-white/20 text-4xl mb-4 block" style="font-family: var(--font-editorial);">02.</span>
-                    <h4 class="text-lg uppercase tracking-widest mb-4 font-bold">Engenharia 3D</h4>
-                    <p class="text-white/50 text-sm font-light leading-relaxed">Prototipagem virtual. Estudo aprofundado de ferragens, modulação e compatibilização estrutural com o projeto arquitetônico.</p>
-                </div>
-                <!-- Step 3 -->
-                <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.5s;">
-                    <span class="text-white/20 text-4xl mb-4 block" style="font-family: var(--font-editorial);">03.</span>
-                    <h4 class="text-lg uppercase tracking-widest mb-4 font-bold">Lapidação (Montagem)</h4>
-                    <p class="text-white/50 text-sm font-light leading-relaxed">Execução silenciosa no ambiente. Nossos técnicos agem com o rigor de relojoeiros, garantindo um acabamento irretocável.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO SENSORIAL: O EXPLORADOR DE MATERIAIS -->
-    <section class="py-32 px-6 bg-white text-black">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-            <div class="reveal-left">
-                <h2 class="text-4xl md:text-5xl font-light mb-6" style="font-family: var(--font-editorial);">Sinta a <span class="italic text-gray-400">trama</span> <br>antes do primeiro corte.</h2>
-                <p class="text-gray-600 font-light leading-relaxed mb-10">
-                    Nossa curadoria de materiais atravessa continentes. Do carvalho europeu aos polímeros de alta resistência, cada painel é testado para absorção sonora e durabilidade secular.
-                </p>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="h-20 bg-gray-100 rounded-lg overflow-hidden cursor-pointer material-trigger" data-img="wood">
-                         <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=300" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
-                    </div>
-                    <div class="h-20 bg-gray-100 rounded-lg overflow-hidden cursor-pointer material-trigger" data-img="stone">
-                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=300" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
-                    </div>
-                    <div class="h-20 bg-gray-100 rounded-lg overflow-hidden cursor-pointer material-trigger" data-img="metal">
-                        <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=300" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
+                    <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.2s;">
+                        <span class="text-white/20 text-3xl md:text-4xl mb-3 block" style="font-family: var(--font-editorial);">03.</span>
+                        <h4 class="text-base md:text-lg uppercase tracking-widest mb-2 md:mb-4 font-bold">Lapidação</h4>
+                        <p class="text-white/50 text-xs md:text-sm font-light leading-relaxed">Execução silenciosa no ambiente. Rigor de relojoeiros, acabamento irretocável.</p>
                     </div>
                 </div>
             </div>
-            <div class="relative h-[500px] bg-gray-200 rounded-2xl overflow-hidden reveal-right shadow-2xl">
-                 <div class="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-black/20 z-0">Preview de Textura</div>
-                 <img id="material-preview" src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=800" class="w-full h-full object-cover transition-opacity duration-500">
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- FUNIL DE CONVERSÃO EXTRAORDINÁRIO -->
-    <section class="py-32 bg-[#0d0d0d] relative overflow-hidden">
-        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h3 class="text-3xl md:text-6xl font-light mb-12" style="font-family: var(--font-editorial);">Pronto para esculpir <br><span class="italic text-gold-muted">seu legado?</span></h3>
-            
-            <!-- Formulário Minimalista de Alta Conversão -->
-            <div class="glass p-10 rounded-3xl text-left">
-                <form id="funnel-form" class="space-y-8">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="border-b border-white/10 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">Nome Completo</label>
-                            <input type="text" placeholder="Como devemos chamá-lo?" class="bg-transparent w-full outline-none font-light text-sm">
+        <!-- PROJETOS MAIS VENDIDOS (Imagens Lazy Load) -->
+        <section class="py-16 md:py-32 px-4 md:px-6 bg-[#0a0a0a] relative z-10 border-t border-white/5">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-left md:text-center mb-12 md:mb-20 reveal-up">
+                    <span class="text-gold-muted uppercase tracking-[0.3em] text-[9px] md:text-[10px] block mb-3">Obras Assinadas</span>
+                    <h2 class="text-3xl md:text-5xl font-light" style="font-family: var(--font-editorial);">Nossas <span class="italic text-white/50">Especialidades.</span></h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
+                    <div class="group relative cursor-pointer reveal-up block">
+                        <div class="overflow-hidden rounded-2xl h-[400px] md:h-[500px] w-full relative">
+                            <!-- Mobile: Opacidade fixa para ler. Desktop: Hover effect -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10 md:bg-black/20 md:group-hover:bg-black/0 transition-all duration-700"></div>
+                            <img src="https://images.unsplash.com/photo-1600566753086-00f18efc2207?q=80&w=1200" loading="lazy" decoding="async" alt="Cozinha de Alta Gastronomia" class="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-1000 ease-out">
+                            
+                            <!-- Mobile-only overlay text (dentro da imagem) -->
+                            <div class="absolute bottom-6 left-6 z-20 md:hidden">
+                                <h3 class="text-2xl font-light mb-1 text-white" style="font-family: var(--font-editorial);">Cozinhas Executivas</h3>
+                                <p class="text-gold-muted text-[10px] font-light tracking-widest uppercase">Ver Detalhes</p>
+                            </div>
                         </div>
-                        <div class="border-b border-white/10 pb-2">
-                            <label class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">WhatsApp de Contato</label>
-                            <input type="tel" placeholder="+55 (00) 00000-0000" class="bg-transparent w-full outline-none font-light text-sm">
+                        <!-- Desktop text (abaixo da imagem) -->
+                        <div class="mt-6 justify-between items-end hidden md:flex">
+                            <div>
+                                <h3 class="text-2xl font-light mb-2" style="font-family: var(--font-editorial);">Cozinhas de Alta Gastronomia</h3>
+                                <p class="text-white/40 text-[11px] font-light tracking-widest uppercase">Ilhas Centrais • Eletros Embutidos</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </div>
                         </div>
                     </div>
-                    <div class="border-b border-white/10 pb-2">
-                        <label class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">Ambiente de Interesse</label>
-                        <select class="bg-transparent w-full outline-none font-light text-sm appearance-none">
-                            <option class="bg-black">Cozinha de Alta Gastronomia</option>
-                            <option class="bg-black">Suíte & Closet Master</option>
-                            <option class="bg-black">Home Office Executivo</option>
-                            <option class="bg-black">Living Corporativo</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="w-full bg-gold-muted py-5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                        Enviar para o Departamento de Engenharia
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
 
-    <footer class="p-10 text-center text-[10px] text-white/20 uppercase tracking-[0.5em]">
-        &copy; 2026 LP MÓVEIS PLANEJADOS | Todos os Direitos Reservados
+                    <div class="group relative cursor-pointer reveal-up block">
+                        <div class="overflow-hidden rounded-2xl h-[400px] md:h-[500px] w-full relative">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10 md:bg-black/20 md:group-hover:bg-black/0 transition-all duration-700"></div>
+                            <img src="https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?q=80&w=1200" loading="lazy" decoding="async" alt="Suíte Master e Closet" class="w-full h-full object-cover transform md:group-hover:scale-105 transition-transform duration-1000 ease-out">
+                            
+                            <div class="absolute bottom-6 left-6 z-20 md:hidden">
+                                <h3 class="text-2xl font-light mb-1 text-white" style="font-family: var(--font-editorial);">Suítes Master</h3>
+                                <p class="text-gold-muted text-[10px] font-light tracking-widest uppercase">Ver Detalhes</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 justify-between items-end hidden md:flex">
+                            <div>
+                                <h3 class="text-2xl font-light mb-2" style="font-family: var(--font-editorial);">Suítes & Closets Master</h3>
+                                <p class="text-white/40 text-[11px] font-light tracking-widest uppercase">Vidros Reflecta • Iluminação LED</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPLORADOR DE MATERIAIS (Swipeable no Mobile) -->
+        <section class="py-16 md:py-32 px-4 md:px-6 bg-[#f5f5f5] text-black">
+            <div class="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-2 gap-10 md:gap-20 items-center">
+                <div class="reveal-left order-2 md:order-1">
+                    <h2 class="text-3xl md:text-5xl font-light mb-4 md:mb-6" style="font-family: var(--font-editorial);">Sinta a <span class="italic text-gray-500">trama</span>.</h2>
+                    <p class="text-gray-600 text-sm font-light leading-relaxed mb-8">
+                        Nossa curadoria atravessa continentes. Do carvalho europeu aos polímeros de alta resistência.
+                    </p>
+                    
+                    <!-- Grid Mobile Touch-Swipe / Desktop Normal -->
+                    <div class="flex md:grid md:grid-cols-3 gap-3 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-4 md:pb-0">
+                        <div class="h-24 w-32 md:w-auto md:h-20 shrink-0 snap-center bg-gray-200 rounded-xl overflow-hidden cursor-pointer material-trigger relative" data-img="wood">
+                            <div class="absolute inset-0 bg-black/20 md:hover:bg-transparent transition z-10 flex items-center justify-center md:hidden"><span class="text-white text-[9px] uppercase tracking-widest font-bold">Madeira</span></div>
+                            <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=300" loading="lazy" class="w-full h-full object-cover md:grayscale md:hover:grayscale-0 transition">
+                        </div>
+                        <div class="h-24 w-32 md:w-auto md:h-20 shrink-0 snap-center bg-gray-200 rounded-xl overflow-hidden cursor-pointer material-trigger relative" data-img="stone">
+                            <div class="absolute inset-0 bg-black/20 md:hover:bg-transparent transition z-10 flex items-center justify-center md:hidden"><span class="text-white text-[9px] uppercase tracking-widest font-bold">Pedra</span></div>
+                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=300" loading="lazy" class="w-full h-full object-cover md:grayscale md:hover:grayscale-0 transition">
+                        </div>
+                        <div class="h-24 w-32 md:w-auto md:h-20 shrink-0 snap-center bg-gray-200 rounded-xl overflow-hidden cursor-pointer material-trigger relative" data-img="metal">
+                            <div class="absolute inset-0 bg-black/20 md:hover:bg-transparent transition z-10 flex items-center justify-center md:hidden"><span class="text-white text-[9px] uppercase tracking-widest font-bold">Metal</span></div>
+                            <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=300" loading="lazy" class="w-full h-full object-cover md:grayscale md:hover:grayscale-0 transition">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative h-[350px] md:h-[500px] w-full bg-gray-200 rounded-2xl overflow-hidden reveal-right shadow-xl order-1 md:order-2">
+                    <img id="material-preview" src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=800" loading="lazy" class="w-full h-full object-cover transition-opacity duration-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- FUNIL DE CONVERSÃO OTIMIZADO PARA TOUCH KEYBOARDS -->
+        <section class="py-20 md:py-32 bg-[#0d0d0d] relative overflow-hidden px-4">
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <h3 class="text-3xl md:text-5xl font-light mb-10" style="font-family: var(--font-editorial);">Pronto para esculpir <br><span class="italic text-gold-muted">seu legado?</span></h3>
+                
+                <div class="glass p-6 md:p-10 rounded-2xl md:rounded-3xl text-left">
+                    <form id="funnel-form" class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="border-b border-white/20 pb-3">
+                                <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 block mb-2 font-bold" for="name">Nome Completo</label>
+                                <!-- Font min 16px para não dar zoom no iOS -->
+                                <input type="text" id="name" required placeholder="Como devemos chamá-lo?" class="bg-transparent w-full outline-none font-light text-base text-white placeholder-white/30 p-1">
+                            </div>
+                            <div class="border-b border-white/20 pb-3">
+                                <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 block mb-2 font-bold" for="phone">WhatsApp de Contato</label>
+                                <!-- Inputmode TEL ativa o teclado numérico automaticamente -->
+                                <input type="tel" inputmode="tel" id="phone" autocomplete="tel" required placeholder="(00) 00000-0000" class="bg-transparent w-full outline-none font-light text-base text-white placeholder-white/30 p-1">
+                            </div>
+                        </div>
+                        <div class="border-b border-white/20 pb-3">
+                            <label class="text-[9px] md:text-[10px] uppercase tracking-widest text-white/50 block mb-2 font-bold" for="interest">Ambiente de Interesse</label>
+                            <select id="interest" class="bg-transparent w-full outline-none font-light text-base text-white appearance-none p-1 cursor-pointer">
+                                <option class="bg-[#1a1a1a] text-white">Cozinha de Alta Gastronomia</option>
+                                <option class="bg-[#1a1a1a] text-white">Suíte & Closet Master</option>
+                                <option class="bg-[#1a1a1a] text-white">Projeto Residencial Completo</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Touch target massivo (py-5) no mobile -->
+                        <button type="submit" class="w-full bg-gold-muted text-black py-5 md:py-6 rounded-md md:rounded-full text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-white transition-all active:scale-[0.98]">
+                            Enviar Solicitação para Engenharia
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="p-8 md:p-12 text-center text-[8px] md:text-[10px] text-white/30 uppercase tracking-[0.4em] bg-black">
+        &copy; 2026 SARTORIA MOBILIÁRIO | Todos os Direitos Reservados
     </footer>
 
     <script>
-        // Inicialização do Cursor Sensorial
-        const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', e => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+        // JS OTIMIZADO PARA PERFORMANCE & MOBILE
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        // 1. Cursor Customizado Apenas Desktop
+        if (!isTouchDevice) {
+            const cursor = document.getElementById('custom-cursor');
+            document.addEventListener('mousemove', e => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            });
+            document.querySelectorAll('button, a, input, select, .material-trigger').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(3)');
+                el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+            });
+        }
+
+        // 2. Menu Mobile Fullscreen Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const line1 = document.getElementById('line-1');
+        const line2 = document.getElementById('line-2');
+        let menuOpen = false;
+
+        menuToggle.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            if(menuOpen) {
+                mobileMenu.classList.add('menu-open');
+                line1.style.transform = 'rotate(45deg) translate(2px, 5px)';
+                line2.style.transform = 'rotate(-45deg) translate(2px, -5px)';
+                document.body.style.overflow = 'hidden'; // Evita scroll fundo
+            } else {
+                mobileMenu.classList.remove('menu-open');
+                line1.style.transform = 'rotate(0) translate(0, 0)';
+                line2.style.transform = 'rotate(0) translate(0, 0)';
+                document.body.style.overflow = '';
+            }
         });
 
-        // Efeito de Interação do Cursor em links
-        document.querySelectorAll('button, a, .material-trigger').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(4)');
-            el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        // Fechar menu ao clicar em links
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => menuToggle.click());
         });
 
-        // Animações de Entrada (GSAP) & Smooth Scroll (Lenis)
+        // 3. GSAP & Lenis Smooth Scroll (Configuração Híbrida)
         window.onload = () => {
-            // Inicialização do Lenis (Smooth Scroll de Luxo)
+            // Lenis mais leve para mobile para não engasgar a GPU
             const lenis = new Lenis({
-                duration: 1.2,
+                duration: isTouchDevice ? 0.8 : 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                direction: 'vertical',
-                gestureDirection: 'vertical',
-                smooth: true,
+                smoothTouch: false, // Nativo do celular é melhor p/ touch
             });
 
             function raf(time) {
@@ -361,50 +466,45 @@
             }
             requestAnimationFrame(raf);
 
-            // Nova Animação do Hero com Gatilhos de Atenção (GSAP)
+            // Animação Hero & Glassmorphism Mobile
             const tl = gsap.timeline();
-            tl.to("#hero-sub", { opacity: 1, x: 0, duration: 1, ease: "power3.out" })
+            
+            // Animação da prancha de vidro descendo e rotacionando sutilmente
+            if (isTouchDevice || window.innerWidth < 768) {
+                tl.fromTo("#mobile-glass", 
+                    { y: 150, rotate: -2, opacity: 0 }, 
+                    { y: 48, rotate: -5, opacity: 1, duration: 1.8, ease: "power4.out" }, 
+                    0
+                );
+            }
+
+            tl.to("#hero-sub", { opacity: 1, x: 0, duration: 1, ease: "power3.out" }, "-=0.4")
               .to("#hero-main", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=0.6")
               .to("#hero-desc", { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.8")
               .to("#hero-cta", { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.6")
               .to("#hero-card", { opacity: 1, x: 0, duration: 1.5, ease: "back.out(1.2)" }, "-=1")
-              .to("#hero-scroll", { opacity: 1, duration: 1 }, "-=0.5")
-              // Efeito Ken Burns na imagem de fundo (Zoom muito lento e sofisticado)
-              .fromTo("#hero-img", 
-                 { scale: 1.15 }, 
-                 { scale: 1.05, duration: 20, ease: "none", repeat: -1, yoyo: true }, 
-                 0
-              );
+              .fromTo("#hero-img", { scale: 1.15 }, { scale: 1.05, duration: 20, ease: "none", repeat: -1, yoyo: true }, 0);
         };
 
-        // ScrollTriggers para Elementos de Seção
+        // 4. ScrollTriggers com marcadores limpos e responsivos
         gsap.registerPlugin(ScrollTrigger);
-
-        gsap.from(".reveal-left", {
-            scrollTrigger: ".reveal-left",
-            x: -50, opacity: 0, duration: 1.5, ease: "power3.out"
-        });
-
-        gsap.from(".reveal-right", {
-            scrollTrigger: ".reveal-right",
-            x: 50, opacity: 0, duration: 1.5, ease: "power3.out"
-        });
-
-        // Nova animação para a seção de Metodologia
-        gsap.utils.toArray('.reveal-up').forEach(elem => {
-            gsap.from(elem, {
-                scrollTrigger: {
-                    trigger: elem,
-                    start: "top 85%",
-                },
-                y: 40,
-                opacity: 0,
-                duration: 1.2,
-                ease: "power3.out"
+        
+        // Disable scroll triggers on very small screens to save battery if needed
+        const matchMedia = gsap.matchMedia();
+        
+        matchMedia.add("(min-width: 320px)", () => {
+            gsap.from(".reveal-left", { scrollTrigger: { trigger: ".reveal-left", start: "top 80%" }, x: -30, opacity: 0, duration: 1.2, ease: "power3.out" });
+            gsap.from(".reveal-right", { scrollTrigger: { trigger: ".reveal-right", start: "top 80%" }, x: 30, opacity: 0, duration: 1.2, ease: "power3.out" });
+            
+            gsap.utils.toArray('.reveal-up').forEach(elem => {
+                gsap.from(elem, {
+                    scrollTrigger: { trigger: elem, start: "top 85%" },
+                    y: 30, opacity: 0, duration: 1, ease: "power3.out"
+                });
             });
         });
 
-        // Lógica do Explorador de Materiais
+        // 5. Explorador de Materiais Otimizado
         const triggers = document.querySelectorAll('.material-trigger');
         const preview = document.getElementById('material-preview');
         const images = {
@@ -414,9 +514,15 @@
         };
 
         triggers.forEach(t => {
-            t.addEventListener('click', () => {
+            // Usa 'pointerdown' para melhor resposta no touch e 'click' no mouse
+            t.addEventListener(isTouchDevice ? 'pointerdown' : 'click', (e) => {
                 const type = t.getAttribute('data-img');
                 preview.style.opacity = 0;
+                
+                // Feedback visual ativo no touch
+                triggers.forEach(trig => trig.classList.remove('border', 'border-gold-muted'));
+                t.classList.add('border', 'border-gold-muted');
+
                 setTimeout(() => {
                     preview.src = images[type];
                     preview.style.opacity = 1;
@@ -424,22 +530,32 @@
             });
         });
 
-        // Simulação de Data Layer para Rastreamento Sensorial
-        document.getElementById('funnel-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Aqui entraria o push para GTM/Stape.io
-            console.log("Evento disparado: Lead_High_Value_Captured");
-            alert("Sua solicitação foi enviada. Nossa equipe de engenharia entrará em contato em breve.");
-        });
-
-        // Navbar Blur on Scroll
+        // Navbar Solid on Scroll
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            if(window.scrollY > 50) {
-                nav.classList.add('glass', 'py-4');
+            if(window.scrollY > 30) {
+                nav.classList.add('bg-black/90', 'backdrop-blur-md', 'py-3');
+                nav.classList.remove('p-4', 'md:p-6');
             } else {
-                nav.classList.remove('glass', 'py-4');
+                nav.classList.remove('bg-black/90', 'backdrop-blur-md', 'py-3');
+                nav.classList.add('p-4', 'md:p-6');
             }
+        });
+
+        // Mascara WhatsApp (Simples) e Submit
+        document.getElementById('funnel-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "Processando...";
+            btn.classList.add('opacity-70');
+            
+            setTimeout(() => {
+                alert("Projeto encaminhado para a Sartoria. Nossa equipe entrará em contato via WhatsApp.");
+                btn.innerText = originalText;
+                btn.classList.remove('opacity-70');
+                e.target.reset();
+            }, 1500);
         });
     </script>
 </body>
