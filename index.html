@@ -17,9 +17,9 @@
     
     <style>
         :root {
-            /* PALETA SENSORIAL: ARGILA QUEIMADA & PRETO CARBONIZADO */
+            /* PALETA SENSORIAL: NOGUEIRA TRANSLÚCIDO & PRETO CARBONIZADO */
             --obsidian: #0A0908;
-            --terracotta: #8C523D;
+            --nogueira: #6B4226; /* Cor da Marca: Nogueira Profundo */
             --smoke: #F2EFE9;
             --font-ui: 'Montserrat', sans-serif;
             --font-editorial: 'Cormorant Garamond', serif;
@@ -37,28 +37,36 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Fundo de Engenharia (Grid Técnico com toque de Argila) */
+        /* Fundo de Engenharia (Grid Técnico com toque de Nogueira) */
         .arch-grid-bg {
             background-color: var(--obsidian);
             background-image: 
-                linear-gradient(rgba(140, 82, 61, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(140, 82, 61, 0.05) 1px, transparent 1px);
+                linear-gradient(rgba(107, 66, 38, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(107, 66, 38, 0.05) 1px, transparent 1px);
             background-size: 40px 40px;
             background-position: center center;
         }
 
-        /* O NOVO VIDRO TRANSLÚCIDO ARGILA (Exclusividade Absoluta) */
-        .glass-terra {
-            background: rgba(30, 15, 10, 0.5); 
+        /* O NOVO VIDRO TRANSLÚCIDO NOGUEIRA (Cor da Marca - Fixo e Imediato) */
+        .glass-nogueira {
+            background: rgba(30, 15, 10, 0.75); /* Escurecido para ALTO CONTRASTE */
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(140, 82, 61, 0.3);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(139, 87, 50, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
             transition: all 0.4s ease;
         }
-        .glass-terra:hover {
-            background: rgba(140, 82, 61, 0.2);
-            border-color: rgba(140, 82, 61, 0.6);
+        .glass-nogueira:hover {
+            background: rgba(107, 66, 38, 0.4); 
+            border-color: rgba(139, 87, 50, 0.8);
+        }
+
+        /* Profundidade Extrema para Tipografia (Legibilidade Máxima) */
+        .text-depth {
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9), 0 2px 10px rgba(10, 9, 8, 0.8);
+        }
+        .text-depth-sm {
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 1), 0 1px 4px rgba(0, 0, 0, 0.7);
         }
 
         /* Menu Overlay Fullscreen */
@@ -74,29 +82,28 @@
             border-radius: 0; padding: 12px 0; color: white;
             transition: border-color 0.3s ease;
         }
-        .input-couture:focus { outline: none; border-bottom-color: var(--terracotta); }
+        .input-couture:focus { outline: none; border-bottom-color: var(--nogueira); }
     </style>
 </head>
-<body class="selection:bg-[#8C523D] selection:text-white">
+<body class="selection:bg-[#6B4226] selection:text-white">
 
-    <!-- NAVEGAÇÃO DE LUXO -->
-    <nav class="fixed w-full z-[100] p-4 md:p-8 flex justify-between items-center transition-all duration-700" id="navbar">
-        <div class="text-xl md:text-3xl font-bold tracking-tighter z-[110] relative text-white drop-shadow-md">SARTORIA<span class="font-light text-[10px] align-top ml-1 text-[#8C523D]">®</span></div>
+    <!-- NAVEGAÇÃO DE LUXO (Vidro ofuscado NOGUEIRA fixo desde o carregamento) -->
+    <nav class="fixed w-full z-[100] p-4 md:py-4 md:px-8 flex justify-between items-center glass-nogueira border-b border-white/5 transition-all duration-500" id="navbar">
+        <div class="text-xl md:text-3xl font-bold tracking-tighter z-[110] relative text-white drop-shadow-md">SARTORIA<span class="font-light text-[10px] align-top ml-1 text-[#6B4226]">®</span></div>
         
         <div class="hidden md:flex space-x-12 text-[10px] uppercase tracking-[0.4em] font-medium text-white/80">
-            <a href="#metodologia" class="hover:text-[#8C523D] transition-colors p-2 drop-shadow-md">O Atelier</a>
-            <a href="#obras" class="hover:text-[#8C523D] transition-colors p-2 drop-shadow-md">Obras Assinadas</a>
-            <a href="#materiais" class="hover:text-[#8C523D] transition-colors p-2 drop-shadow-md">Materialidade</a>
+            <a href="#metodologia" class="hover:text-[#6B4226] transition-colors p-2 drop-shadow-md">O Atelier</a>
+            <a href="#obras" class="hover:text-[#6B4226] transition-colors p-2 drop-shadow-md">Obras Assinadas</a>
+            <a href="#materiais" class="hover:text-[#6B4226] transition-colors p-2 drop-shadow-md">Materialidade</a>
         </div>
         
-        <button class="hidden md:block glass-terra px-8 py-3 text-[10px] uppercase tracking-[0.3em] font-bold text-white rounded-sm">
-            Consultoria
-        </button>
+        <!-- Espaço vazio à direita para manter o menu centralizado no Desktop -->
+        <div class="hidden md:block w-24"></div>
 
-        <!-- MENU HAMBÚRGUER REFINADO -->
-        <button id="menu-toggle" class="md:hidden relative z-[110] p-3 rounded-full glass-terra focus:outline-none shadow-lg">
-            <div class="w-5 h-[1.5px] bg-[#8C523D] mb-1.5 transition-transform duration-300 origin-right" id="line-1"></div>
-            <div class="w-5 h-[1.5px] bg-[#8C523D] transition-transform duration-300 origin-right" id="line-2"></div>
+        <!-- MENU HAMBÚRGUER REFINADO (Mobile) -->
+        <button id="menu-toggle" class="md:hidden relative z-[110] p-3 rounded-full border border-[#6B4226]/40 focus:outline-none shadow-lg glass-nogueira">
+            <div class="w-5 h-[1.5px] bg-[#6B4226] mb-1.5 transition-transform duration-300 origin-right" id="line-1"></div>
+            <div class="w-5 h-[1.5px] bg-[#6B4226] transition-transform duration-300 origin-right" id="line-2"></div>
         </button>
     </nav>
 
@@ -104,76 +111,66 @@
     <div id="mobile-menu" class="fixed inset-0 bg-[#0A0908] z-[105] flex flex-col justify-center items-center arch-grid-bg">
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0908] z-0"></div>
         <div class="flex flex-col space-y-10 text-center text-3xl relative z-10" style="font-family: var(--font-editorial);">
-            <a href="#metodologia" class="mobile-link text-white/60 hover:text-[#8C523D] transition-colors italic">O Atelier</a>
-            <a href="#obras" class="mobile-link text-white/60 hover:text-[#8C523D] transition-colors italic">Obras Assinadas</a>
-            <a href="#materiais" class="mobile-link text-white/60 hover:text-[#8C523D] transition-colors italic">Materialidade</a>
+            <a href="#metodologia" class="mobile-link text-white/60 hover:text-[#6B4226] transition-colors italic">O Atelier</a>
+            <a href="#obras" class="mobile-link text-white/60 hover:text-[#6B4226] transition-colors italic">Obras Assinadas</a>
+            <a href="#materiais" class="mobile-link text-white/60 hover:text-[#6B4226] transition-colors italic">Materialidade</a>
         </div>
-        <button class="mt-20 border border-[#8C523D]/40 text-[#8C523D] px-10 py-5 text-[10px] font-bold uppercase tracking-[0.3em] rounded-sm relative z-10 hover:bg-[#8C523D] hover:text-white transition-colors glass-terra">
-            Agendar Consultoria
+        <button class="mt-20 border border-[#6B4226]/40 text-[#6B4226] px-10 py-5 text-[10px] font-bold uppercase tracking-[0.3em] rounded-sm relative z-10 hover:bg-[#6B4226] hover:text-white transition-colors glass-nogueira">
+            Iniciar Projeto
         </button>
     </div>
 
     <main>
-        <!-- HERO REFINADO: Estático, Sem Vazio Preto e Imediato -->
+        <!-- HERO REFINADO: Vidro Estático Nogueira, Imagem no Topo, Texto Elegante -->
         <section class="relative h-[100svh] w-full arch-grid-bg overflow-hidden flex flex-col justify-end">
             
             <div class="absolute inset-0 z-0">
-                <!-- Gradiente de Proteção Ajustado para cobrir perfeitamente sem deixar o "vazio" -->
-                <div class="absolute bottom-0 left-0 w-full h-[60%] md:h-[50%] bg-gradient-to-t from-[#0A0908] via-[#0A0908]/70 to-transparent z-10"></div>
-                <div class="absolute bottom-0 left-0 w-full md:w-[50%] h-full bg-gradient-to-r from-[#0A0908]/90 via-[#0A0908]/40 to-transparent z-10 hidden md:block"></div>
+                <!-- Gradiente de Proteção Reforçado na Base para garantir contraste seguro com a tipografia -->
+                <div class="absolute bottom-0 left-0 w-full h-[70%] md:h-[60%] bg-gradient-to-t from-[#0A0908] via-[#0A0908]/80 to-transparent z-10"></div>
                 
+                <!-- Imagem tracionada para o topo (object-top) mantendo a casa 100% visível -->
                 <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000" 
-                     class="w-full h-full object-cover object-center z-0" id="hero-img" alt="Cozinha SARTORIA">
+                     class="w-full h-full object-cover object-top z-0" id="hero-img" alt="Arquitetura SARTORIA">
             </div>
 
-            <div class="relative z-20 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-end justify-between pb-10 md:pb-16">
+            <!-- Container Principal do Hero -->
+            <div class="relative z-20 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-end justify-between pb-10 md:pb-16 gap-8">
                 
-                <!-- Coluna Esquerda: Totalmente Estática e Imediata -->
+                <!-- Esquerda: Textos Estáticos e Elegantes -->
                 <div class="w-full md:w-3/5 text-left">
-                    
-                    <!-- Selo "Ofuscado" Estático -->
-                    <div class="inline-flex items-center gap-3 mb-6 glass-terra px-5 py-2 rounded-sm border-l-[3px] border-l-[#8C523D]">
-                        <p class="text-[#8C523D] uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold">A Engenharia do Viver</p>
+                    <!-- Selo "Ofuscado" Nogueira Fixo - ALTO CONTRASTE -->
+                    <div class="inline-flex items-center gap-3 mb-6 glass-nogueira px-5 py-2.5 rounded-sm border-l-[3px] border-l-[#C28C65]">
+                        <p class="text-[#F2EFE9] uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold">Planejados de Alto Padrão</p>
                     </div>
                     
-                    <!-- Título Imediato (Abaixo da parte ofuscada) -->
-                    <h1 class="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[5.5rem] font-light tracking-tighter leading-[1.05] text-white mb-6 drop-shadow-lg">
-                        A Alta-Costura do <br> <span class="italic font-bold text-[#F2EFE9]" style="font-family: var(--font-editorial);">Mobiliário.</span>
+                    <!-- Tipografia Refinada com Profundidade (text-depth) -->
+                    <h1 class="text-[2.8rem] sm:text-5xl md:text-6xl lg:text-[6.5rem] font-light tracking-tight leading-[0.95] text-white mb-6 text-depth" style="font-family: var(--font-editorial);">
+                        A Alta-Costura <br>
+                        <span class="italic text-white/90">do Mobiliário.</span>
                     </h1>
                     
-                    <p class="text-white/80 font-light text-[13px] md:text-sm max-w-md leading-relaxed mb-8 md:mb-10 drop-shadow-md">
-                        Não preenchemos espaços. Nós esculpimos a sua rotina com tolerância zero para falhas e materiais de precisão absoluta.
+                    <p class="text-white/90 font-light text-[13px] md:text-sm max-w-md leading-relaxed text-depth-sm">
+                        Não preenchemos espaços. Nós esculpimos a sua rotina com engenharia de ponta, tolerância zero para falhas e materiais de precisão absoluta.
                     </p>
-
-                    <div class="flex flex-col sm:flex-row items-center gap-4 md:gap-6">
-                        <button class="w-full sm:w-auto glass-terra text-white px-10 py-4 md:py-5 text-[10px] font-bold uppercase tracking-[0.3em] rounded-sm text-center flex items-center justify-center gap-4">
-                            <span>Agendar Consultoria</span>
-                            <svg class="w-3 h-3 text-[#8C523D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Card de Autoridade (Estático) -->
-                <div class="w-full md:w-2/5 flex justify-end pb-2 hidden md:flex">
-                    <div class="glass-terra p-6 rounded-xl w-72 relative overflow-hidden group">
-                        <p class="text-[9px] uppercase tracking-[0.3em] text-[#8C523D] mb-4 border-b border-white/10 pb-2 font-bold">Especificação</p>
-                        <h4 class="font-bold text-sm mb-1 text-white" style="font-family: var(--font-editorial);">Residência Alphaville</h4>
-                        <div class="space-y-3 mt-4">
-                            <div class="flex justify-between items-center"><span class="text-[10px] text-white/50 uppercase">Lâmina</span><span class="text-xs font-medium text-white">Nogueira Natural</span></div>
-                            <div class="flex justify-between items-center"><span class="text-[10px] text-white/50 uppercase">Tolerância</span><span class="text-xs font-bold text-[#8C523D]">0.1 milímetros</span></div>
-                        </div>
-                    </div>
+                <!-- Direita (Inferior): Botão Iniciar Projeto com Vidro Nogueira -->
+                <div class="w-full md:w-2/5 flex md:justify-end pb-2">
+                    <button class="w-full sm:w-auto glass-nogueira text-white px-10 py-5 text-[10px] font-bold uppercase tracking-[0.3em] rounded-sm text-center flex items-center justify-center gap-4 hover:bg-[#6B4226] hover:border-[#6B4226] transition-all duration-500 group shadow-2xl">
+                        <span>Iniciar Projeto</span>
+                        <svg class="w-4 h-4 text-[#6B4226] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </button>
                 </div>
 
             </div>
         </section>
 
-        <!-- TENDÊNCIAS: A PALETA DO ARQUITETO (Carrossel Mobile + Linha Única Desktop) -->
+        <!-- TENDÊNCIAS: A PALETA DO ARQUITETO -->
         <section class="py-24 md:py-32 px-4 md:px-6 arch-grid-bg relative z-10 border-t border-white/5">
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 reveal-up px-2 md:px-0">
-                    <div class="relative pl-6 border-l border-[#8C523D]/40">
-                        <span class="text-[#8C523D] uppercase tracking-[0.4em] text-[10px] block mb-4 font-bold">Trend Report 2026 | Digital Arch</span>
+                    <div class="relative pl-6 border-l border-[#6B4226]/40">
+                        <span class="text-[#6B4226] uppercase tracking-[0.4em] text-[10px] block mb-4 font-bold">Trend Report 2026 | Digital Arch</span>
                         <h2 class="text-3xl md:text-5xl font-light leading-tight text-white" style="font-family: var(--font-editorial);">A Paleta <br><span class="italic text-white/40">do Arquiteto.</span></h2>
                     </div>
                     <p class="text-white/40 text-sm max-w-sm font-light mt-6 md:mt-0 leading-relaxed md:text-right">
@@ -181,24 +178,22 @@
                     </p>
                 </div>
 
-                <!-- O Grid Ajustado: Flex/Snap no Mobile, Grid de 1 linha no Desktop -->
                 <div class="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-6 md:pb-0 px-2 md:px-0 reveal-up">
-                    
                     <div class="shrink-0 snap-center w-[85vw] md:w-auto group relative overflow-hidden rounded-sm h-[320px] md:h-[380px] cursor-pointer border border-white/5">
                         <div class="absolute inset-0 bg-[#1A1817] transition-transform duration-1000 md:group-hover:scale-105"></div>
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0A0908] via-transparent to-transparent opacity-80"></div>
                         <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8">
-                            <span class="text-[9px] uppercase tracking-[0.3em] text-[#8C523D] block mb-2 font-mono">01. Wabi-Sabi</span>
+                            <span class="text-[9px] uppercase tracking-[0.3em] text-[#6B4226] block mb-2 font-mono">01. Wabi-Sabi</span>
                             <h4 class="text-white text-lg md:text-xl font-light tracking-wide">Carvalho Carbonizado</h4>
                         </div>
                     </div>
                     
                     <div class="shrink-0 snap-center w-[85vw] md:w-auto group relative overflow-hidden rounded-sm h-[320px] md:h-[380px] cursor-pointer border border-white/5">
-                        <div class="absolute inset-0 bg-[#7A4B3A] transition-transform duration-1000 md:group-hover:scale-105"></div>
+                        <div class="absolute inset-0 bg-[#6B4226] transition-transform duration-1000 md:group-hover:scale-105"></div>
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0A0908] via-transparent to-transparent opacity-80"></div>
                         <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8">
-                            <span class="text-[9px] uppercase tracking-[0.3em] text-white/70 block mb-2 font-mono">02. Terroso</span>
-                            <h4 class="text-white text-lg md:text-xl font-light tracking-wide">Argila Queimada</h4>
+                            <span class="text-[9px] uppercase tracking-[0.3em] text-white/70 block mb-2 font-mono">02. Identidade</span>
+                            <h4 class="text-white text-lg md:text-xl font-light tracking-wide">Nogueira Profunda</h4>
                         </div>
                     </div>
                     
@@ -227,7 +222,7 @@
         <section id="metodologia" class="py-24 md:py-32 px-6 bg-[#0A0908] relative z-10 border-t border-white/5">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-16 md:mb-24 reveal-up">
-                    <span class="text-[#8C523D] uppercase tracking-[0.4em] text-[10px] block mb-4 font-bold">Engenharia Invisível</span>
+                    <span class="text-[#6B4226] uppercase tracking-[0.4em] text-[10px] block mb-4 font-bold">Engenharia Invisível</span>
                     <h2 class="text-4xl md:text-5xl font-light text-white" style="font-family: var(--font-editorial);">Do <span class="italic text-white/40">Croqui</span> à Realidade.</h2>
                 </div>
                 
@@ -236,17 +231,17 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
                         <div class="relative reveal-up">
-                            <div class="w-16 h-16 rounded-full glass-terra flex items-center justify-center text-xl font-light text-white mb-8 relative z-10" style="font-family: var(--font-editorial);">01</div>
+                            <div class="w-16 h-16 rounded-full glass-nogueira flex items-center justify-center text-xl font-light text-white mb-8 relative z-10" style="font-family: var(--font-editorial);">01</div>
                             <h4 class="text-xl tracking-wide mb-4 font-normal text-white">Imersão Sensorial</h4>
                             <p class="text-white/40 text-sm font-light leading-relaxed">Mapeamos a incidência de luz, a acústica e a sua rotina para desenhar o fluxo perfeito do ambiente.</p>
                         </div>
                         <div class="relative reveal-up" style="transition-delay: 0.1s;">
-                            <div class="w-16 h-16 rounded-full glass-terra flex items-center justify-center text-xl font-light text-white mb-8 relative z-10" style="font-family: var(--font-editorial);">02</div>
+                            <div class="w-16 h-16 rounded-full glass-nogueira flex items-center justify-center text-xl font-light text-white mb-8 relative z-10" style="font-family: var(--font-editorial);">02</div>
                             <h4 class="text-xl tracking-wide mb-4 font-normal text-white">Engenharia 3D</h4>
                             <p class="text-white/40 text-sm font-light leading-relaxed">Cada dobradiça e encaixe é prototipado em software para garantir zero margem de erro na fabricação.</p>
                         </div>
                         <div class="relative reveal-up" style="transition-delay: 0.2s;">
-                            <div class="w-16 h-16 rounded-full glass-terra flex items-center justify-center text-xl font-light text-white mb-8 relative z-10" style="font-family: var(--font-editorial);">03</div>
+                            <div class="w-16 h-16 rounded-full glass-nogueira flex items-center justify-center text-xl font-light text-white mb-8 relative z-10" style="font-family: var(--font-editorial);">03</div>
                             <h4 class="text-xl tracking-wide mb-4 font-normal text-white">Lapidação In Loco</h4>
                             <p class="text-white/40 text-sm font-light leading-relaxed">Nossa equipe executa a montagem com precisão de relojoeiros. Uma entrega limpa e monumental.</p>
                         </div>
@@ -255,25 +250,25 @@
             </div>
         </section>
 
-        <!-- FUNIL DE VENDAS: CONSULTORIA -->
+        <!-- FUNIL DE VENDAS: PROJETO -->
         <section class="py-24 md:py-32 arch-grid-bg relative border-t border-white/5 px-4 md:px-6">
             <div class="max-w-5xl mx-auto text-center relative z-10 reveal-up">
-                <span class="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-8 glass-terra">
+                <span class="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-8 glass-nogueira">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                 </span>
                 <h3 class="text-4xl md:text-5xl font-light mb-6 text-white" style="font-family: var(--font-editorial);">Pronto para esculpir <br><span class="italic text-white/50">o seu legado?</span></h3>
-                <p class="text-white/40 text-sm mb-12 max-w-lg mx-auto font-light">Nosso departamento de engenharia entrará em contato para agendar uma consultoria privativa.</p>
+                <p class="text-white/40 text-sm mb-12 max-w-lg mx-auto font-light">Nosso departamento de engenharia entrará em contato para iniciar o estudo do seu projeto.</p>
                 
-                <div class="glass-terra p-6 md:p-16 text-left max-w-4xl mx-auto relative overflow-hidden rounded-xl">
-                    <form id="consultoria-form" class="space-y-8 relative z-10">
+                <div class="glass-nogueira p-6 md:p-16 text-left max-w-4xl mx-auto relative overflow-hidden rounded-xl">
+                    <form id="projeto-form" class="space-y-8 relative z-10">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                             <div class="relative">
                                 <input type="text" id="name" required placeholder=" " class="input-couture w-full text-base peer">
-                                <label for="name" class="absolute left-0 top-3 text-white/40 text-xs tracking-widest uppercase transition-all duration-300 peer-focus:-top-4 peer-focus:text-[9px] peer-focus:text-[#8C523D] peer-valid:-top-4 peer-valid:text-[9px] peer-valid:text-white/30">Nome e Sobrenome</label>
+                                <label for="name" class="absolute left-0 top-3 text-white/40 text-xs tracking-widest uppercase transition-all duration-300 peer-focus:-top-4 peer-focus:text-[9px] peer-focus:text-[#6B4226] peer-valid:-top-4 peer-valid:text-[9px] peer-valid:text-white/30">Nome e Sobrenome</label>
                             </div>
                             <div class="relative">
                                 <input type="tel" inputmode="tel" id="phone" required placeholder=" " class="input-couture w-full text-base peer">
-                                <label for="phone" class="absolute left-0 top-3 text-white/40 text-xs tracking-widest uppercase transition-all duration-300 peer-focus:-top-4 peer-focus:text-[9px] peer-focus:text-[#8C523D] peer-valid:-top-4 peer-valid:text-[9px] peer-valid:text-white/30">WhatsApp Corporativo</label>
+                                <label for="phone" class="absolute left-0 top-3 text-white/40 text-xs tracking-widest uppercase transition-all duration-300 peer-focus:-top-4 peer-focus:text-[9px] peer-focus:text-[#6B4226] peer-valid:-top-4 peer-valid:text-[9px] peer-valid:text-white/30">WhatsApp Corporativo</label>
                             </div>
                         </div>
                         <div class="relative">
@@ -285,8 +280,8 @@
                             </select>
                         </div>
                         <div class="pt-6 text-center">
-                            <button type="submit" class="w-full md:w-auto glass-terra border border-[#8C523D] text-white px-12 py-5 text-xs font-bold uppercase tracking-[0.4em] hover:bg-[#8C523D] hover:text-white transition-all duration-500 rounded-sm">
-                                Submeter ao Atelier
+                            <button type="submit" class="w-full md:w-auto glass-nogueira border border-[#6B4226] text-white px-12 py-5 text-xs font-bold uppercase tracking-[0.4em] hover:bg-[#6B4226] hover:text-white transition-all duration-500 rounded-sm">
+                                Submeter Projeto
                             </button>
                         </div>
                     </form>
@@ -299,15 +294,15 @@
     <footer class="bg-[#050404] border-t border-white/5 pt-16 pb-8 px-6 relative z-10">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10 mb-16">
             <div>
-                <div class="text-2xl font-bold tracking-tighter text-white mb-2">SARTORIA<span class="font-light text-xs align-top ml-1 text-[#8C523D]">®</span></div>
+                <div class="text-2xl font-bold tracking-tighter text-white mb-2">SARTORIA<span class="font-light text-xs align-top ml-1 text-[#6B4226]">®</span></div>
                 <p class="text-white/30 text-[10px] uppercase tracking-[0.4em] font-mono">Precisão Absoluta.</p>
             </div>
             
             <div class="flex gap-10">
                 <div class="flex flex-col gap-4">
-                    <span class="text-[#8C523D] text-[9px] uppercase tracking-widest font-bold">Contato</span>
-                    <a href="#" class="text-white/60 text-xs hover:text-[#8C523D] transition-colors">atelier@sartoria.com</a>
-                    <a href="#" class="text-white/60 text-xs hover:text-[#8C523D] transition-colors">+55 11 99999.0000</a>
+                    <span class="text-[#6B4226] text-[9px] uppercase tracking-widest font-bold">Contato</span>
+                    <a href="#" class="text-white/60 text-xs hover:text-[#6B4226] transition-colors">atelier@sartoria.com</a>
+                    <a href="#" class="text-white/60 text-xs hover:text-[#6B4226] transition-colors">+55 11 99999.0000</a>
                 </div>
             </div>
         </div>
@@ -321,9 +316,7 @@
     </footer>
 
     <script>
-        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
-        // Menu Mobile (Hambúrguer de Vidro Translúcido Argila)
+        // Menu Mobile
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
         const line1 = document.getElementById('line-1');
@@ -351,6 +344,7 @@
 
         // GSAP & Lenis
         window.onload = () => {
+            const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
             const lenis = new Lenis({
                 duration: isTouchDevice ? 0.8 : 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -363,7 +357,7 @@
             }
             requestAnimationFrame(raf);
 
-            // Animação LENTA e SUTIL apenas na Imagem de Fundo do Hero (O Texto é Estático)
+            // Animação LENTA e SUTIL apenas na Imagem de Fundo do Hero (O Texto e o Vidro são Fixos)
             gsap.fromTo("#hero-img", 
                 { scale: 1.0 }, 
                 { scale: 1.06, duration: 25, ease: "none", repeat: -1, yoyo: true }
@@ -379,20 +373,20 @@
             });
         };
 
-        // Navbar Solid on Scroll
+        // Navbar Ajuste de Padding ao Rolar (A classe glass-nogueira NÃO é mais removida)
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if(window.scrollY > 50) {
-                nav.classList.add('glass-terra', 'py-3');
-                nav.classList.remove('p-4', 'md:p-8');
+                nav.classList.add('py-3');
+                nav.classList.remove('p-4', 'md:py-4', 'md:px-8');
             } else {
-                nav.classList.remove('glass-terra', 'py-3');
-                nav.classList.add('p-4', 'md:p-8');
+                nav.classList.remove('py-3');
+                nav.classList.add('p-4', 'md:py-4', 'md:px-8');
             }
         });
 
-        // Formulário Consultoria
-        document.getElementById('consultoria-form').addEventListener('submit', (e) => {
+        // Formulário
+        document.getElementById('projeto-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const originalText = btn.innerText;
