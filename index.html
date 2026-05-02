@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LP Móveis Planejados | A Engenharia do Seu Espaço</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@100;300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <style>
+        :root {
+            --obsidian: #0a0a0a;
+            --gold-muted: #c5a059;
+            --smoke: #f5f5f5;
+            --font-ui: 'Montserrat', sans-serif;
+            --font-editorial: 'Cormorant Garamond', serif;
+        }
+
+        body {
+            background-color: var(--obsidian);
+            color: var(--smoke);
+            font-family: var(--font-ui);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Cursor Customizado Sensorial */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.15s ease-out;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,1) 100%);
+        }
+
+        .grain {
+            position: fixed;
+            top: 0; left: 0; height: 100%; width: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.04;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .text-reveal {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        /* Otimização Mobile */
+        @media (max-width: 768px) {
+            cursor: auto !important;
+            #custom-cursor { display: none; }
+            .hero-title { font-size: 2.5rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="custom-cursor"></div>
+    <div class="grain"></div>
+
+    <!-- Barra de Navegação Minimalista -->
+    <nav class="fixed w-full z-[100] p-6 flex justify-between items-center transition-all duration-500" id="navbar">
+        <div class="text-2xl font-bold tracking-tighter">SARTORIA<span class="font-light text-xs align-top ml-1">®</span></div>
+        <div class="hidden md:flex space-x-10 text-[11px] uppercase tracking-[0.3em] font-light">
+            <a href="#" class="hover:text-gold-muted transition">O Atelier</a>
+            <a href="#" class="hover:text-gold-muted transition">Coleções</a>
+            <a href="#" class="hover:text-gold-muted transition">Obras Executadas</a>
+        </div>
+        <button class="glass px-6 py-2 text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+            Consultoria Privada
+        </button>
+    </nav>
+
+    <!-- SEÇÃO HERO EDITORIAL & NEURO-VENDAS -->
+    <section class="relative h-[100svh] w-full flex flex-col justify-end pb-12 md:pb-20 overflow-hidden">
+        <!-- Background Dinâmico (Efeito Ken Burns) -->
+        <div class="absolute inset-0 z-0">
+            <!-- Gradiente Vignette reajustado: Libera totalmente o topo (muito respiro) e escurece de forma suave apenas a base e lateral onde o texto descansa -->
+            <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/60 to-transparent z-10 w-full md:w-3/4"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent z-10 h-[80%] bottom-0"></div>
+            <!-- Imagem de Altíssimo Padrão -->
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2000" 
+                 alt="Cozinha de Luxo Planejada" 
+                 class="w-full h-full object-cover object-top origin-center z-0" id="hero-img">
+        </div>
+
+        <!-- Layout Assimétrico Editorial ancorado na base -->
+        <div class="relative z-30 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-end justify-between">
+            
+            <!-- Coluna Esquerda: O Copy de Alto Ticket -->
+            <div class="w-full md:w-3/5 text-left mb-6 md:mb-0">
+                <div class="text-reveal overflow-hidden mb-4 md:mb-6">
+                    <div class="flex items-center gap-3 md:gap-4 opacity-0" id="hero-sub">
+                        <div class="w-6 md:w-8 h-[1px] bg-gold-muted"></div>
+                        <p class="text-gold-muted uppercase tracking-[0.3em] md:tracking-[0.4em] text-[8px] md:text-[10px] font-bold">Arquitetura em Mobília</p>
+                    </div>
+                </div>
+                
+                <!-- Tipografia super responsiva: Fica delicada no mobile e gigante no desktop -->
+                <h1 class="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tighter mb-6 opacity-0" id="hero-main">
+                    A Alta-Costura do <br> 
+                    <span class="italic font-bold" style="font-family: var(--font-editorial);">Mobiliário Planejado.</span>
+                </h1>
+                
+                <p class="text-white/60 font-light text-xs sm:text-sm md:text-base max-w-md leading-relaxed mb-8 md:mb-10 opacity-0" id="hero-desc">
+                    Não preenchemos espaços. Nós esculpimos o seu modo de viver. Projetos autorais executados milímetro a milímetro para ambientes que exigem o extraordinário.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-8 opacity-0" id="hero-cta">
+                    <button class="bg-white text-black px-8 md:px-10 py-3 md:py-4 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-gold-muted hover:text-white transition-colors duration-300 w-full sm:w-auto text-center">
+                        Agendar Consultoria
+                    </button>
+                    <button class="flex items-center justify-center sm:justify-start gap-3 group text-white/50 hover:text-white transition-colors w-full sm:w-auto">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white transition-colors shrink-0">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                        <span class="text-[9px] md:text-[10px] uppercase tracking-widest font-light">Explorar o Acervo</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: O Gatilho da Autoridade Técnica (Glassmorphism) -->
+            <div class="w-full md:w-2/5 flex justify-end opacity-0 hidden md:flex pb-2" id="hero-card">
+                <div class="glass p-6 rounded-2xl w-72 border border-white/10 shadow-2xl relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <p class="text-[9px] uppercase tracking-[0.3em] text-white/40 mb-4 border-b border-white/10 pb-2">Especificação em Destaque</p>
+                    <h4 class="font-bold text-sm mb-1" style="font-family: var(--font-editorial);">Residência Alphaville</h4>
+                    <p class="text-xs font-light text-white/60 mb-6">Execução Completa • 450m²</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-light text-white/40 uppercase tracking-wider">Lâmina</span>
+                            <span class="text-xs font-medium">Nogueira Italiana</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-light text-white/40 uppercase tracking-wider">Ferragens</span>
+                            <span class="text-xs font-medium">Blum Legrabox®</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-light text-white/40 uppercase tracking-wider">Tolerância</span>
+                            <span class="text-xs font-medium text-gold-muted">0.1 milímetros</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-6 left-6 md:left-12 z-30 flex items-center gap-4 opacity-0 hidden md:flex" id="hero-scroll">
+            <span class="text-[9px] uppercase tracking-[0.4em] text-white/40 rotate-180" style="writing-mode: vertical-rl;">Deslize</span>
+            <div class="w-[1px] h-12 bg-gradient-to-b from-white/50 to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- NOVA SEÇÃO: A ARQUITETURA DO PROCESSO (Metodologia) -->
+    <section class="py-32 px-6 bg-[#050505] relative z-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 reveal-up">
+                <div>
+                    <span class="text-gold-muted uppercase tracking-[0.3em] text-[10px] block mb-4">Nossa Metodologia</span>
+                    <h2 class="text-4xl md:text-6xl font-light leading-tight" style="font-family: var(--font-editorial);">Do <span class="italic text-white/50">Croqui</span> <br>à Realidade.</h2>
+                </div>
+                <p class="text-white/40 text-sm max-w-sm font-light mt-6 md:mt-0 leading-relaxed">
+                    O mesmo rigor técnico aplicado em obras de arte monumentais, trazido para a escala da sua rotina e do seu lar.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Step 1 -->
+                <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.1s;">
+                    <span class="text-white/20 text-4xl mb-4 block" style="font-family: var(--font-editorial);">01.</span>
+                    <h4 class="text-lg uppercase tracking-widest mb-4 font-bold">Imersão & Briefing</h4>
+                    <p class="text-white/50 text-sm font-light leading-relaxed">Mapeamento sensorial do seu espaço. Entendemos a luz, a circulação e as suas necessidades de armazenamento invisíveis.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.3s;">
+                    <span class="text-white/20 text-4xl mb-4 block" style="font-family: var(--font-editorial);">02.</span>
+                    <h4 class="text-lg uppercase tracking-widest mb-4 font-bold">Engenharia 3D</h4>
+                    <p class="text-white/50 text-sm font-light leading-relaxed">Prototipagem virtual. Estudo aprofundado de ferragens, modulação e compatibilização estrutural com o projeto arquitetônico.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="border-t border-white/10 pt-6 reveal-up" style="transition-delay: 0.5s;">
+                    <span class="text-white/20 text-4xl mb-4 block" style="font-family: var(--font-editorial);">03.</span>
+                    <h4 class="text-lg uppercase tracking-widest mb-4 font-bold">Lapidação (Montagem)</h4>
+                    <p class="text-white/50 text-sm font-light leading-relaxed">Execução silenciosa no ambiente. Nossos técnicos agem com o rigor de relojoeiros, garantindo um acabamento irretocável.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO SENSORIAL: O EXPLORADOR DE MATERIAIS -->
+    <section class="py-32 px-6 bg-white text-black">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+            <div class="reveal-left">
+                <h2 class="text-4xl md:text-5xl font-light mb-6" style="font-family: var(--font-editorial);">Sinta a <span class="italic text-gray-400">trama</span> <br>antes do primeiro corte.</h2>
+                <p class="text-gray-600 font-light leading-relaxed mb-10">
+                    Nossa curadoria de materiais atravessa continentes. Do carvalho europeu aos polímeros de alta resistência, cada painel é testado para absorção sonora e durabilidade secular.
+                </p>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="h-20 bg-gray-100 rounded-lg overflow-hidden cursor-pointer material-trigger" data-img="wood">
+                         <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=300" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
+                    </div>
+                    <div class="h-20 bg-gray-100 rounded-lg overflow-hidden cursor-pointer material-trigger" data-img="stone">
+                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=300" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
+                    </div>
+                    <div class="h-20 bg-gray-100 rounded-lg overflow-hidden cursor-pointer material-trigger" data-img="metal">
+                        <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=300" class="w-full h-full object-cover grayscale hover:grayscale-0 transition">
+                    </div>
+                </div>
+            </div>
+            <div class="relative h-[500px] bg-gray-200 rounded-2xl overflow-hidden reveal-right shadow-2xl">
+                 <div class="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-black/20 z-0">Preview de Textura</div>
+                 <img id="material-preview" src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=800" class="w-full h-full object-cover transition-opacity duration-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- FUNIL DE CONVERSÃO EXTRAORDINÁRIO -->
+    <section class="py-32 bg-[#0d0d0d] relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h3 class="text-3xl md:text-6xl font-light mb-12" style="font-family: var(--font-editorial);">Pronto para esculpir <br><span class="italic text-gold-muted">seu legado?</span></h3>
+            
+            <!-- Formulário Minimalista de Alta Conversão -->
+            <div class="glass p-10 rounded-3xl text-left">
+                <form id="funnel-form" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="border-b border-white/10 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">Nome Completo</label>
+                            <input type="text" placeholder="Como devemos chamá-lo?" class="bg-transparent w-full outline-none font-light text-sm">
+                        </div>
+                        <div class="border-b border-white/10 pb-2">
+                            <label class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">WhatsApp de Contato</label>
+                            <input type="tel" placeholder="+55 (00) 00000-0000" class="bg-transparent w-full outline-none font-light text-sm">
+                        </div>
+                    </div>
+                    <div class="border-b border-white/10 pb-2">
+                        <label class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">Ambiente de Interesse</label>
+                        <select class="bg-transparent w-full outline-none font-light text-sm appearance-none">
+                            <option class="bg-black">Cozinha de Alta Gastronomia</option>
+                            <option class="bg-black">Suíte & Closet Master</option>
+                            <option class="bg-black">Home Office Executivo</option>
+                            <option class="bg-black">Living Corporativo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-gold-muted py-5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                        Enviar para o Departamento de Engenharia
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="p-10 text-center text-[10px] text-white/20 uppercase tracking-[0.5em]">
+        &copy; 2026 LP MÓVEIS PLANEJADOS | Todos os Direitos Reservados
+    </footer>
+
+    <script>
+        // Inicialização do Cursor Sensorial
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', e => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+        });
+
+        // Efeito de Interação do Cursor em links
+        document.querySelectorAll('button, a, .material-trigger').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(4)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        });
+
+        // Animações de Entrada (GSAP) & Smooth Scroll (Lenis)
+        window.onload = () => {
+            // Inicialização do Lenis (Smooth Scroll de Luxo)
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // Nova Animação do Hero com Gatilhos de Atenção (GSAP)
+            const tl = gsap.timeline();
+            tl.to("#hero-sub", { opacity: 1, x: 0, duration: 1, ease: "power3.out" })
+              .to("#hero-main", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=0.6")
+              .to("#hero-desc", { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.8")
+              .to("#hero-cta", { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.6")
+              .to("#hero-card", { opacity: 1, x: 0, duration: 1.5, ease: "back.out(1.2)" }, "-=1")
+              .to("#hero-scroll", { opacity: 1, duration: 1 }, "-=0.5")
+              // Efeito Ken Burns na imagem de fundo (Zoom muito lento e sofisticado)
+              .fromTo("#hero-img", 
+                 { scale: 1.15 }, 
+                 { scale: 1.05, duration: 20, ease: "none", repeat: -1, yoyo: true }, 
+                 0
+              );
+        };
+
+        // ScrollTriggers para Elementos de Seção
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from(".reveal-left", {
+            scrollTrigger: ".reveal-left",
+            x: -50, opacity: 0, duration: 1.5, ease: "power3.out"
+        });
+
+        gsap.from(".reveal-right", {
+            scrollTrigger: ".reveal-right",
+            x: 50, opacity: 0, duration: 1.5, ease: "power3.out"
+        });
+
+        // Nova animação para a seção de Metodologia
+        gsap.utils.toArray('.reveal-up').forEach(elem => {
+            gsap.from(elem, {
+                scrollTrigger: {
+                    trigger: elem,
+                    start: "top 85%",
+                },
+                y: 40,
+                opacity: 0,
+                duration: 1.2,
+                ease: "power3.out"
+            });
+        });
+
+        // Lógica do Explorador de Materiais
+        const triggers = document.querySelectorAll('.material-trigger');
+        const preview = document.getElementById('material-preview');
+        const images = {
+            wood: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=800',
+            stone: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=800',
+            metal: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=800'
+        };
+
+        triggers.forEach(t => {
+            t.addEventListener('click', () => {
+                const type = t.getAttribute('data-img');
+                preview.style.opacity = 0;
+                setTimeout(() => {
+                    preview.src = images[type];
+                    preview.style.opacity = 1;
+                }, 300);
+            });
+        });
+
+        // Simulação de Data Layer para Rastreamento Sensorial
+        document.getElementById('funnel-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Aqui entraria o push para GTM/Stape.io
+            console.log("Evento disparado: Lead_High_Value_Captured");
+            alert("Sua solicitação foi enviada. Nossa equipe de engenharia entrará em contato em breve.");
+        });
+
+        // Navbar Blur on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('glass', 'py-4');
+            } else {
+                nav.classList.remove('glass', 'py-4');
+            }
+        });
+    </script>
+</body>
+</html>
